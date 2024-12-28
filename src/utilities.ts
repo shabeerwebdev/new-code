@@ -59,12 +59,8 @@ export const formatCurrency = (
   info: { userTyping: boolean; input: string },
   countryCode: string | undefined
 ) => {
-  if (!value || isNaN(Number(value))) {
-    return "";
-  }
-  if (typeof value === "string") {
-    value = parseFloat(value);
-  }
+  if (!value || isNaN(Number(value))) return "";
+  if (typeof value === "string") value = parseFloat(value);
 
   const locale = countryMetaData[countryCode || "1"].locale;
   const currency = countryMetaData[countryCode || "1"].currency;

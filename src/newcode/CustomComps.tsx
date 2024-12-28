@@ -34,7 +34,7 @@ const CurrencyInput = withFloatingLabel(
         prefix={prefix}
         parser={(value) =>
           value ? parseFloat(value.replace(/[^0-9.-]+/g, "")) : undefined
-        }        
+        }
         {...props}
       />
     );
