@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState } from "react";
 import OwnerDetailsModal from "./OwnerForm";
 import {
@@ -23,6 +22,7 @@ import {
   CloseCircleOutlined,
 } from "@ant-design/icons";
 import OwnersForm from "./OwnerForm";
+import { useGetCountriesQuery } from "./stores/actions/Lookups";
 const { Text, Paragraph } = Typography;
 
 const ParentComponent = () => {
@@ -114,7 +114,7 @@ const ParentComponent = () => {
                 </Row>
 
                 <Button
-                  type="text"
+                  color="primary" variant="text"
                   icon={
                     isEditable ? (
                       <CloudUploadOutlined style={{ fontSize: 16 }} />
@@ -125,9 +125,9 @@ const ParentComponent = () => {
                 >
                   {isEditable ? "Save Changes" : "Edit Details"}
                 </Button>
-
                 <Button
-                  type="text"
+                  color="danger"
+                  variant="text"
                   icon={<CloseOutlined style={{ fontSize: 16 }} />}
                   onClick={closeModal}
                 >

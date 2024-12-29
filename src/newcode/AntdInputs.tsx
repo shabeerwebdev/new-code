@@ -19,6 +19,28 @@ type PlacePrediction = {
   description: string;
   place_id: string;
 };
+interface AddressDetails {
+  streetName?: string;
+  streetNumber?: string;
+  neighborhood?: string;
+  sublocality?: string;
+  premise?: string;
+  city?: string;
+  county?: string;
+  state?: string;
+  country?: string;
+  postalCode?: string;
+  formatted_address?: string;
+  latitude?: number
+  longitude?: number
+}
+type AddressInputProps = {
+  countryCode?: string;
+  value: any;
+  onChange: () => void;
+  statesData?: any[];
+  setAddressDetails: (details: AddressDetails) => void;
+};
 
 const TextInput = withFloatingLabel(({ value, onChange, ...props }) => {
   return (
@@ -115,15 +137,11 @@ const TreeSelectInput = withFloatingLabel(
 
 const AddressInput = withFloatingLabel(
   ({
-    countryCode = "in",
+    countryCode = "ae",
     onChange,
     value,
     ...props
-  }: {
-    countryCode?: string;
-    value: any;
-    onChange: () => void;
-  }) => {
+  }: AddressInputProps) => {
     const [options, setOptions] = React.useState<PlacePrediction[]>([]);
     const [searchValue, setSearchValue] = React.useState<string>("");
     const [isScriptLoaded, setIsScriptLoaded] = React.useState(false);
@@ -208,10 +226,10 @@ const AddressInput = withFloatingLabel(
             ) {
               const components = place.address_components;
               if (components && place.geometry) {
-                const fullAddress = parseAddressComponents(components);
+                const storedOptions = props.statesData || [];
+                const fullAddress = parseAddressComponents(components, storedOptions);
                 const latitude = place.geometry.location.lat();
                 const longitude = place.geometry.location.lng();
-                // @ts-ignore
                 props.setAddressDetails({
                   ...fullAddress,
                   formatted_address: place.formatted_address || "",
