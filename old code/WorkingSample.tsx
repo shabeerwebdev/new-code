@@ -7,11 +7,24 @@ import {
   SelectInput,
   DateInput,
   TreeSelectInput,
-} from "./CustomComps";
+  AddressInput
+} from "../src/newcode/CustomComps";
 import { Form } from "antd";
+type AddressDetails = {
+  formatted_address: string;
+  latitude: number;
+  longitude: number;
+  [key: string]: any;
+};
 
 export const ExampleForm: React.FC = () => {
   const [form] = Form.useForm();
+  const [addressDetails, setAddressDetails] = React.useState<AddressDetails>({
+      formatted_address: "",
+      latitude: 0,
+      longitude: 0,
+    });
+console.log(addressDetails, "addressDetails");
 
   const selectOptions = [
     { label: "Option 1", value: 1 },
@@ -53,6 +66,9 @@ export const ExampleForm: React.FC = () => {
       </Form.Item>
       <Form.Item name="treeSelect">
         <TreeSelectInput label="Tree Select Input" treeData={treeData} />
+      </Form.Item>
+      <Form.Item name="Address">
+        <AddressInput setAddressDetails={setAddressDetails} label="Search Address" />
       </Form.Item>
     </Form>
   );

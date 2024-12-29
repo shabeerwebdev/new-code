@@ -3,10 +3,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./styles.css";
-// import { MultiStepFormEnhanced } from "./App1";
-import { ExampleForm } from "./newcode/Dick";
+import { ExampleForm } from "../old code/WorkingSample";
 import ManageOwnerForm from "./newcode/Owner";
-import GooglePlacesSelect from "./newcode/GooglePlacesSelect";
+import GooglePlacesSelect from "../old code/GooglePlacesSelect";
+import ParentComponent from "../old code/Parent";
 
 const rootElement = document.getElementById("root")!;
 const root = ReactDOM.createRoot(rootElement);
@@ -16,7 +16,8 @@ root.render(
     {/* <MultiStepFormEnhanced /> */}
     {/* <ExampleForm/> */}
     {/* <ManageOwnerForm /> */}
-    <GooglePlacesSelect/>
+    {/* <GooglePlacesSelect/> */}
+    <ParentComponent/>
   </React.StrictMode>
 );
 

@@ -24,11 +24,19 @@ body {
   z-index: 9;
 }
 
-.ant-input,
-.ant-input-number,
-.ant-picker-outlined,
-.ant-input-outlined {
+.ant-input:not(textarea),
+.ant-input-number:not(textarea),
+.ant-picker-outlined:not(textarea),
+.ant-input-outlined:not(textarea) {
   padding: 24px 12px 8px 11px;
+}
+
+textarea {
+  font-size: 16px;
+}
+
+textarea::placeholder {
+  font-size: 16px;
 }
 
 .ant-input-number-input {

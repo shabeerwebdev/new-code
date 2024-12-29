@@ -1,9 +1,12 @@
+// @ts-nocheck
 import React, { useState, useEffect, useRef } from "react";
 import { AutoComplete } from "antd";
-import { parseAddressComponents } from "../utilities";
+import { parseAddressComponents } from "../src/newcode/utilities";
 
 type AddressDetails = {
   formatted_address: string;
+  latitude: number;
+  longitude: number;
   [key: string]: any;
 };
 
@@ -12,14 +15,18 @@ type PlacePrediction = {
   place_id: string;
 };
 
-const AddressInput = ({ countryCode = "ae" }: { countryCode?: string }) => {
+const AddressInput = ({ countryCode = "in" }: { countryCode?: string }) => {
   const [options, setOptions] = useState<PlacePrediction[]>([]);
   const [addressDetails, setAddressDetails] = useState<AddressDetails>({
     formatted_address: "",
+    latitude: 0,
+    longitude: 0,
   });
-  const [searchValue, setSearchValue] = useState<string>("");
+  const [searchValue, setSearchValue] = useState<string>(""); // To track typed value
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const mapRef = useRef<google.maps.Map | null>(null); // Reference to the map instance
+  const markerRef = useRef<google.maps.Marker | null>(null); // Reference to the marker
 
   useEffect(() => {
     const loadGoogleMapsScript = () => {
@@ -48,15 +55,21 @@ const AddressInput = ({ countryCode = "ae" }: { countryCode?: string }) => {
 
   useEffect(() => {
     if (isScriptLoaded && window.google) {
-      autocompleteRef.current = new window.google.maps.places.Autocomplete(
-        document.createElement("input"),
+      mapRef.current = new window.google.maps.Map(
+        document.getElementById("map") as HTMLElement,
         {
-          types: ["geocode"],
-          componentRestrictions: { country: countryCode },
+          center: { lat: 0, lng: 0 },
+          zoom: 2,
         }
       );
+
+      markerRef.current = new window.google.maps.Marker({
+        map: mapRef.current,
+        position: { lat: 0, lng: 0 },
+        title: "Selected Place",
+      });
     }
-  }, [isScriptLoaded, countryCode]);
+  }, [isScriptLoaded]);
 
   const handleSearch = (value: string) => {
     setSearchValue(value);
@@ -94,11 +107,26 @@ const AddressInput = ({ countryCode = "ae" }: { countryCode?: string }) => {
             const components = place.address_components;
             if (components) {
               const fullAddress = parseAddressComponents(components);
+              const latitude = place.geometry.location.lat();
+              const longitude = place.geometry.location.lng();
+
               setAddressDetails({
                 ...fullAddress,
                 formatted_address: place.formatted_address || "",
+                latitude,
+                longitude,
               });
               setSearchValue(place.formatted_address || "");
+
+              if (mapRef.current && markerRef.current) {
+                const position = { lat: latitude, lng: longitude };
+
+                mapRef.current.setCenter(position);
+                mapRef.current.setZoom(14);
+
+                markerRef.current.setPosition(position);
+                markerRef.current.setVisible(true);
+              }
             }
           }
         }

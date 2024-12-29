@@ -126,7 +126,6 @@ export function parseAddressComponents(components: any[]): AddressDetails {
     premise: "premise"
   };
 
-  // Initialize fullAddress with the correct type
   const fullAddress: AddressDetails = {};
 
   components.forEach(({ long_name, types }) => {

@@ -8,7 +8,7 @@ import {
   InputNumber,
 } from "antd";
 import "./styles.css";
-import { formatCurrency, formatMobile, countryMetaData } from "./utilities";
+import { formatCurrency, formatMobile, countryMetaData } from "../src/newcode/utilities";
 
 interface FloatingInputProps {
   label: string;
