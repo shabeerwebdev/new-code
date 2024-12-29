@@ -1,12 +1,13 @@
-// @ts-nocheck
-
-import React from 'react';
+//@ts-nocheck
+import React, { useRef } from 'react';
 import { Form, Row, Col, Button } from 'antd';
 // import { emailValidation, dropdownValidation, zipcodeValidation, SARPincodeValidation, mediumTextValidation, longTextValidation } from './validations';
 import { TextInput, MobileInput, SelectInput } from './CustomComps';
+import useGooglePlacesAutocomplete from './google';
 
 const ManageOwnerForm = ({ countryCode= "91", statesData }) => {
   const [form] = Form.useForm();
+  const googleRef = useRef(useGooglePlacesAutocomplete)
 
   const onFinish = (values) => {
     console.log('Form Submitted:', values);
@@ -60,7 +61,7 @@ const ManageOwnerForm = ({ countryCode= "91", statesData }) => {
             name="Address"
             rules={[{ required: true, message: 'Please input the address' }]}
           >
-            <TextInput label="Address" />
+            <TextInput ref={googleRef} label="Address" />
           </Form.Item>
         </Col>
 

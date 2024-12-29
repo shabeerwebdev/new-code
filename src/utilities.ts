@@ -1,3 +1,4 @@
+// @ts-nocheck
 export const countryMetaData: {
   [key: string]: {
     symbol: string;
@@ -95,3 +96,46 @@ export const formatMobile = (
 
   return formattedNumber;
 };
+
+interface AddressDetails {
+  streetName?: string;
+  streetNumber?: string;
+  neighborhood?: string;
+  sublocality?: string;
+  premise?: string;
+  city?: string;
+  county?: string;
+  state?: string;
+  country?: string;
+  postalCode?: string;
+  formatted_address: string
+}
+
+
+export function parseAddressComponents(components: any[]): AddressDetails {
+  const addressMapping: { [key: string]: keyof AddressDetails } = {
+    locality: "city",
+    administrative_area_level_1: "state",
+    administrative_area_level_2: "county",
+    country: "country",
+    postal_code: "postalCode",
+    route: "streetName",
+    street_number: "streetNumber",
+    neighborhood: "neighborhood",
+    sublocality: "sublocality",
+    premise: "premise"
+  };
+
+  // Initialize fullAddress with the correct type
+  const fullAddress: AddressDetails = {};
+
+  components.forEach(({ long_name, types }) => {
+    types.forEach((type: string) => {
+      if (addressMapping[type]) {
+        fullAddress[addressMapping[type]] = long_name;
+      }
+    });
+  });
+
+  return fullAddress;
+}

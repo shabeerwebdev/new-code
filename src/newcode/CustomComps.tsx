@@ -2,14 +2,16 @@ import { Input, InputNumber, Select, DatePicker, TreeSelect } from "antd";
 import withFloatingLabel from "../withFloatingLabel";
 import { countryMetaData, formatCurrency, formatMobile } from "../utilities";
 
-const TextInput = withFloatingLabel(({ value, onChange, ...props }) => (
-  <Input
-    style={{ width: "100%" }}
-    value={value}
-    onChange={onChange}
-    {...props}
-  />
-));
+const TextInput = withFloatingLabel(({ value, onChange, ...props }) => {
+  return (
+    <Input
+      style={{ width: "100%" }}
+      value={value}
+      onChange={onChange}
+      {...props}
+    />
+  );
+});
 
 const NumberInput = withFloatingLabel(({ value, onChange, ...props }) => (
   <InputNumber
