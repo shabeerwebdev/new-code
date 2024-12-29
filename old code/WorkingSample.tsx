@@ -8,7 +8,7 @@ import {
   DateInput,
   TreeSelectInput,
   AddressInput
-} from "../src/newcode/CustomComps";
+} from "../src/newcode/AntdInputs";
 import { Form } from "antd";
 type AddressDetails = {
   formatted_address: string;

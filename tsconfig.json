@@ -1,5 +1,5 @@
 {
-  "include": ["./src/**/*", "old code/FloatingL, "old code/GooglePlacesSelect.tsx"abel.tsx", "old code/FloatingInput.tsx", "old code/withFloatingLabel.tsx", "src/newcode/withFloatingLabel.tsx", "old code/App.tsx", "old code/Parent.tsx", "old code/google.ts", "old code/WorkingSample.tsx"],
+  "include": ["./src/**/*", "old code/FloatingL, "old code/GooglePlacesSelect.tsx"abel.tsx", "old code/FloatingInput.tsx", "old code/withFloatingLabel.tsx", "src/newcode/withFloatingLabel.tsx", "old code/App.tsx", "src/newcode/Parent.tsx", "old code/google.ts", "old code/WorkingSample.tsx"],
   "compilerOptions": {
   "strict": true,
   "moduleResolution": "node",

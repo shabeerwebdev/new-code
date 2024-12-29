@@ -6,7 +6,7 @@ import {
   TreeSelect,
   AutoComplete,
 } from "antd";
-import withFloatingLabel from "../../old code/withFloatingLabel";
+import withFloatingLabel from "./withFloatingLabel";
 import {
   countryMetaData,
   formatCurrency,
