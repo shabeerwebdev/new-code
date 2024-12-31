@@ -1,147 +1,101 @@
-import React, { useState } from "react";
-import OwnerDetailsModal from "./OwnerForm";
-import {
-  Form,
-  Modal,
-  Button,
-  Row,
-  Col,
-  Switch,
-  Tooltip,
-  message,
-  Space,
-  Typography,
-} from "antd";
-import {
-  CloseOutlined,
-  CheckOutlined,
-  EditOutlined,
-  FileAddOutlined,
-  CloudUploadOutlined,
-  CheckCircleOutlined,
-  CloseCircleOutlined,
-} from "@ant-design/icons";
-import OwnersForm from "./OwnerForm";
-import { useGetCountriesQuery } from "./stores/actions/Lookups";
-const { Text, Paragraph } = Typography;
+import React from 'react';
+import { Modal, Button } from 'antd';
+import OwnersForm from './OwnerForm';
+import { useGetOwnerByIdQuery } from './services/ownersApi';
+import { useGetCountriesQuery } from './services/lookups';
+import { ModalHeader } from './components/ModalHeader';
 
 const ParentComponent = () => {
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [modalMode, setModalMode] = useState("create");
-  const [isEditable, setIsEditable] = useState(modalMode !== "view");
-
-  const [formData, setFormData] = useState({
-    fullName: "John Doe",
-    mobile: "1234567890",
-    email: "johndoe@example.com",
-    note: "Important owner.",
-    Address: "123 Main Street",
-    city: "San Francisco",
-    state: "California",
-    zipcode: "94107",
-    country: "US",
+  const [skip, setskip] = React.useState(false);
+  const [modalState, setModalState] = React.useState({
+    name: '',
+    isOpen: false,
+    isEditable: false,
+    dirty: false,
   });
-
-  const openModal = (mode, data = null) => {
-    setModalMode(mode);
-    if (data) setFormData(data);
-    setModalVisible(true);
+  const initialValues = {
+    Name: '',
+    Phone: '',
+    Email: '',
+    Address: '',
+    City: '',
+    State: 0,
+    Country: '',
+    Zip: '',
+    Note: '',
   };
+  const {
+    data: ownerData,
+    isLoading,
+    isError,
+  } = useGetOwnerByIdQuery(8, { skip: !skip });
+  const { data: statesData = [] } = useGetCountriesQuery({
+    shape: 'TREE',
+    WithFilter: false,
+    Filter: 50,
+  });
+  const formData = React.useMemo(() => {
+    if (modalState.isOpen) {
+      if (modalState.name === 'create') {
+        return initialValues;
+      } else if (modalState.name === 'view' && !isLoading && !isError) {
+        return ownerData;
+      }
+    }
+    return null;
+  }, [modalState, isLoading, isError, ownerData]);
+
+  const handleModalState = (name: string) => {
+    setskip(name !== 'create');
+    setModalState((prev) => ({ ...prev, isOpen: true, name }));
+  };
+
+  const openModal = (name: string) => handleModalState(name);
 
   const closeModal = () => {
-    setModalVisible(false);
-  };
-
-  const handleFormSubmit = (values) => {
-    console.log("Form Submitted:", values);
-    message.success("Owner details saved successfully!");
-    setModalVisible(false);
+    setModalState({
+      name: '',
+      isOpen: false,
+      isEditable: false,
+      dirty: false,
+    });
   };
 
   return (
     <div>
-      <Button type="primary" onClick={() => openModal("create")}>
+      <Button type="primary" onClick={() => openModal('create')}>
         Create Owner
       </Button>
-      <Button
-        onClick={() => openModal("view", formData)}
-        style={{ marginLeft: "10px" }}
-      >
+      <Button onClick={() => openModal('view')} style={{ marginLeft: '10px' }}>
         View Owner
-      </Button>
-      <Button
-        onClick={() => openModal("edit", formData)}
-        style={{ marginLeft: "10px" }}
-      >
-        Edit Owner
       </Button>
 
       <Modal
-        closable={false}
+        loading={isLoading}
         footer={null}
+        destroyOnClose={true}
+        closable={false}
         title={
-          <Row align="middle" justify="space-between">
-            <Col>
-              <Text>
-                {isEditable === "create"
-                  ? "Create Owner Details"
-                  : "Owner Details"}
-              </Text>
-            </Col>
-
-            <Col>
-              <Row align="middle" justify="space-between">
-                <Row gutter={8}>
-                  <Col>
-                    <Paragraph
-                      style={{
-                        fontWeight: "normal",
-                        margin: 0,
-                        width: "fit-content",
-                      }}
-                    >
-                      Edit Mode
-                    </Paragraph>
-                  </Col>
-                  <Col style={{ marginRight: 15 }}>
-                    <Switch
-                      checked={isEditable}
-                      onChange={() => setIsEditable(!isEditable)}
-                      checkedChildren={<CheckOutlined />}
-                      unCheckedChildren={<CloseOutlined />}
-                    />
-                  </Col>
-                </Row>
-
-                <Button
-                  color="primary" variant="text"
-                  icon={
-                    isEditable ? (
-                      <CloudUploadOutlined style={{ fontSize: 16 }} />
-                    ) : (
-                      <EditOutlined style={{ fontSize: 16 }} />
-                    )
-                  }
-                >
-                  {isEditable ? "Save Changes" : "Edit Details"}
-                </Button>
-                <Button
-                  color="danger"
-                  variant="text"
-                  icon={<CloseOutlined style={{ fontSize: 16 }} />}
-                  onClick={closeModal}
-                >
-                  Close
-                </Button>
-              </Row>
-            </Col>
-          </Row>
+          <ModalHeader
+            modalName={modalState.name}
+            isEditable={modalState.isEditable}
+            setIsEditable={(val) =>
+              setModalState((prev) => ({ ...prev, isEditable: val }))
+            }
+            closeModal={closeModal}
+            dirty={modalState.dirty}
+          />
         }
-        visible={isModalVisible}
-        onClose={closeModal}
+        open={modalState.isOpen}
         width={900}
       >
-        <OwnersForm isEditable={isEditable} onSubmit={handleFormSubmit} />
+        <OwnersForm
+          formData={formData}
+          statesData={statesData}
+          setDirty={(val) => setModalState((prev) => ({ ...prev, dirty: typeof val !== null }) )}
+          isEditable={modalState.isEditable}
+          modalName={modalState.name}
+        />
       </Modal>
     </div>
   );

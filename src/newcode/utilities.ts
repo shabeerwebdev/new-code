@@ -1,3 +1,5 @@
+import { AddressDetails, country, StateOption } from "./types";
+
 export const countryMetaData: {
   [key: string]: {
     symbol: string;
@@ -96,36 +98,22 @@ export const formatMobile = (
   return formattedNumber;
 };
 
-interface AddressDetails {
-  streetName?: string;
-  streetNumber?: string;
-  neighborhood?: string;
-  sublocality?: string;
-  premise?: string;
-  city?: string;
-  county?: string;
-  state?: string;
-  country?: string;
-  postalCode?: string;
-  formatted_address?: string;
-}
-
 interface storedOptionsObj {
-  code : string
-  label : string
-  value : string
+  code: string;
+  label: string;
+  value: string;
 }
 
 export function parseAddressComponents(
-  components: { long_name: string; types: string[]; }[],
+  components: { long_name: string; types: string[] }[],
   storedOptions: storedOptionsObj[]
 ): AddressDetails {
   const addressMapping: { [key: string]: keyof AddressDetails } = {
-    locality: "city",
-    administrative_area_level_1: "state",
-    administrative_area_level_2: "county",
-    country: "country",
-    postal_code: "postalCode",
+    locality: "City",
+    administrative_area_level_1: "State",
+    administrative_area_level_2: "Country",
+    country: "Country",
+    postal_code: "Zip",
     route: "streetName",
     street_number: "streetNumber",
     neighborhood: "neighborhood",
@@ -158,34 +146,17 @@ export function parseAddressComponents(
   return fullAddress;
 }
 
-interface states {
-  StateId: number,
-  CountryId: number,
-  StateCode: string,
-  StateName: string,
-}
-
-interface country {
-  CountryId: number,
-  CountryCode: string,
-  CountryName: string,
-  RegionId: number,
-  RegionCode: string,
-  PhoneCode: number,
-  CurrencyId: number,
-  CurrencyCode: string,
-  CurrencyName: string,
-  States: states[]
-}
-
-export const getStatesData = (countries: country[], countryCode: number) =>
+export const getStatesData = (
+  countries: country[],
+  countryCode: number
+): StateOption[] =>
   countries
-    ?.filter((item: { CountryId: number; }) => item.CountryId === countryCode)[0]
-    ?.States?.map((item: { StateId: any; StateName: any; StateCode: any; }) => ({
+    ?.filter((item) => item.CountryId === countryCode)[0]
+    ?.States?.map((item) => ({
       value: item.StateId,
       label: item.StateName,
       code: item.StateCode,
-    }));
+    })) || [];
 
 const normalizeString = (str: string) =>
   str.trim().replace(/[-_]/g, "").replace(/\s+/g, "").toLowerCase();

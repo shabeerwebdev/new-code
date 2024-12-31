@@ -11,29 +11,10 @@ import {
   countryMetaData,
   formatCurrency,
   formatMobile,
-  parseAddressComponents,
 } from "./utilities";
-import React from "react";
+import { AddressDetails } from "./types";
+import usePlaceSearch from "./usePlaceSearch";
 
-type PlacePrediction = {
-  description: string;
-  place_id: string;
-};
-interface AddressDetails {
-  streetName?: string;
-  streetNumber?: string;
-  neighborhood?: string;
-  sublocality?: string;
-  premise?: string;
-  city?: string;
-  county?: string;
-  state?: string;
-  country?: string;
-  postalCode?: string;
-  formatted_address?: string;
-  latitude?: number
-  longitude?: number
-}
 type AddressInputProps = {
   countryCode?: string;
   value: any;
@@ -137,130 +118,25 @@ const TreeSelectInput = withFloatingLabel(
 
 const AddressInput = withFloatingLabel(
   ({
-    countryCode = "ae",
+    countryCode = "in",
     onChange,
     value,
+    statesData,
     ...props
   }: AddressInputProps) => {
-    const [options, setOptions] = React.useState<PlacePrediction[]>([]);
-    const [searchValue, setSearchValue] = React.useState<string>("");
-    const [isScriptLoaded, setIsScriptLoaded] = React.useState(false);
-    const mapRef = React.useRef<google.maps.Map | null>(null);
-    const markerRef = React.useRef<google.maps.Marker | null>(null);
 
-    React.useEffect(() => {
-      const loadGoogleMapsScript = () => {
-        if (typeof window !== "undefined" && !window.google) {
-          const script = document.createElement("script");
-          script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyATclXxJxRPPyRAxc2SoJQDiWdAHDQ-4TI&libraries=places`;
-          script.async = true;
-          script.onload = () => setIsScriptLoaded(true);
-          script.onerror = (err) =>
-            console.error("Google Maps script loading error", err);
-          document.body.appendChild(script);
-        } else {
-          setIsScriptLoaded(true);
-        }
-      };
-
-      loadGoogleMapsScript();
-
-      return () => {
-        const scriptElements = document.querySelectorAll(
-          "script[src*='maps.googleapis.com']"
-        );
-        scriptElements.forEach((script) => script.remove());
-      };
-    }, []);
-
-    React.useEffect(() => {
-      if (isScriptLoaded && window.google) {
-        mapRef.current = new window.google.maps.Map(
-          document.getElementById("map") as HTMLElement,
-          {
-            center: { lat: 0, lng: 0 },
-            zoom: 2,
-          }
-        );
-
-        markerRef.current = new window.google.maps.Marker({
-          map: mapRef.current,
-          position: { lat: 0, lng: 0 },
-          title: "Selected Place",
-        });
-      }
-    }, [isScriptLoaded]);
-
-    const handleSearch = (value: string) => {
-      setSearchValue(value);
-
-      if (window.google) {
-        const service = new window.google.maps.places.AutocompleteService();
-        service.getPlacePredictions(
-          { input: value, componentRestrictions: { country: countryCode } },
-          (predictions, status) => {
-            if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-              setOptions(predictions || []);
-            } else {
-              setOptions([]);
-            }
-          }
-        );
-      }
-    };
-
-    const handleSelect = (placeId: string) => {
-      if (window.google) {
-        const service = new window.google.maps.places.PlacesService(
-          document.createElement("div")
-        );
-        service.getDetails(
-          {
-            placeId,
-            fields: ["address_components", "formatted_address", "geometry"],
-          },
-          (place, status) => {
-            if (
-              status === window.google.maps.places.PlacesServiceStatus.OK &&
-              place
-            ) {
-              const components = place.address_components;
-              if (components && place.geometry) {
-                const storedOptions = props.statesData || [];
-                const fullAddress = parseAddressComponents(components, storedOptions);
-                const latitude = place.geometry.location.lat();
-                const longitude = place.geometry.location.lng();
-                props.setAddressDetails({
-                  ...fullAddress,
-                  formatted_address: place.formatted_address || "",
-                  latitude,
-                  longitude,
-                });
-                setSearchValue(place.formatted_address || "");
-
-                if (mapRef.current && markerRef.current) {
-                  const position = { lat: latitude, lng: longitude };
-
-                  mapRef.current.setCenter(position);
-                  mapRef.current.setZoom(14);
-
-                  markerRef.current.setPosition(position);
-                  markerRef.current.setVisible(true);
-                }
-              }
-            }
-          }
-        );
-      }
-    };
+    const { options, searchValue, handleSearch, handleSelect } = usePlaceSearch({
+      countryCode,
+      statesData
+    });
 
     return (
       <div>
         <AutoComplete
           style={{ width: "100%" }}
           onSearch={handleSearch}
-          onSelect={handleSelect}
-          value={searchValue}
+          onSelect={(placeId)=> handleSelect(placeId, props.setAddressDetails)}
+          value={searchValue||value}
           onChange={onChange}
           {...props}
         >

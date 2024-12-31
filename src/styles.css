@@ -54,3 +54,11 @@ textarea::placeholder {
 .ant-select-selector {
   padding: 35px 12px 19px 11px !important;
 }
+
+.map-styles {
+  width: 100%;
+  height: calc(100% - 18px);
+  min-height: 200px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}

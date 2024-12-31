@@ -2,7 +2,8 @@ import { createApi } from '@reduxjs/toolkit/query/react'
 import {
   axiosBaseQuery,
   transformApiResponse,
-} from './services/user-auth-service'
+} from './authService'
+import { getStatesData } from '../utilities'
 
 export const lookups = createApi({
   reducerPath: 'cacheApi',
@@ -14,14 +15,14 @@ export const lookups = createApi({
         method: 'GET',
         baseUrlKey: 'hub',
       }),
-      transformResponse: (response: {
-        StatusCode: number
-        Data: any[]
-        LogEntries: any[]
-      }) => transformApiResponse(response),
-      refetchOnMountOrArgChange: true,
+      transformResponse: (response, meta, arg) => {
+        const res = transformApiResponse(response)
+        const finalData = getStatesData(res, 91)
+        return finalData
+      },
     })
   }),
+  refetchOnMountOrArgChange: true,
 })
 
 export const { useGetCountriesQuery } = lookups
