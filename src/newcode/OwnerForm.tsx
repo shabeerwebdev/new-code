@@ -39,7 +39,8 @@ const OwnersForm: React.FC<OwnersFormProps> = ({
       disabled={modalName === "view" && !isEditable}
       onValuesChange={setDirty}
     >
-      <Title level={5}>Personal Information</Title>
+      {/* <Title level={5}>Personal Information</Title> */}
+      <Divider orientation="left">Personal Information</Divider>
       <Row gutter={24}>
         <Col span={12}>
           <Form.Item name="Name" rules={[{ required: true }]}>
@@ -66,9 +67,7 @@ const OwnersForm: React.FC<OwnersFormProps> = ({
         </Col>
       </Row>
 
-      <Divider />
-
-      <Title level={5}>Address Information</Title>
+      <Divider orientation="left">Address Information</Divider>
       <Row gutter={24}>
         <Col span={12}>
           <Form.Item name="Address" rules={[{ required: true }]}>

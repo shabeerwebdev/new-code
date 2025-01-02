@@ -1,0 +1,52 @@
+.myCustomComponent .float-label {
+  position: relative;
+}
+
+.myCustomComponent .label {
+  position: absolute;
+  pointer-events: none;
+  left: 12px;
+  top: 16px;
+  font-size: 16px;
+  transition: 0.2s ease all;
+  color: #999;
+  z-index: 9;
+}
+
+.myCustomComponent .label-float {
+  top: 6px;
+  font-size: 12px;
+  color: #0977C2;
+  z-index: 9;
+}
+
+.myCustomComponent .ant-input:not(textarea),
+.myCustomComponent .ant-input-number:not(textarea),
+.myCustomComponent .ant-picker-outlined:not(textarea),
+.myCustomComponent .ant-input-outlined:not(textarea) {
+  padding: 24px 12px 8px 11px;
+}
+
+textarea {
+  font-size: 16px;
+}
+
+textarea::placeholder {
+  font-size: 16px;
+}
+
+.myCustomComponent .ant-input-number-input {
+  padding: 0 !important;
+}
+
+.myCustomComponent .ant-input-number-prefix {
+  padding: 20px 0 4px 0;
+}
+
+.myCustomComponent .ant-input-number-prefix+.ant-input-number {
+  padding-left: 0;
+}
+
+.myCustomComponent .ant-select-selector {
+  padding: 35px 12px 19px 11px !important;
+}

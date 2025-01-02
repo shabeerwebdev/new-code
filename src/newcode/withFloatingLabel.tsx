@@ -1,6 +1,6 @@
 import React, { useState, FocusEvent, forwardRef } from "react";
 import { InputRef } from "antd";
-
+import "./inputstyle.css"
 interface FloatingInputHOCProps {
   label: string;
   value: any;
@@ -14,10 +14,10 @@ const withFloatingLabel = (WrappedComponent: React.ComponentType<any>) => {
       
       const [isFocused, setIsFocused] = useState(false);
       const hasValue = value && value.toString().trim().length > 0;
-      const labelClass = isFocused || hasValue ? "label label-float" : "label";
+      const labelClass = isFocused || hasValue ? "myCustomComponent label label-float" : "myCustomComponent label";
 
       return (
-        <div className="float-label">
+        <div className="myCustomComponent float-label">
           <WrappedComponent
             {...props}
             ref={ref}

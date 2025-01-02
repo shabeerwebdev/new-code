@@ -59,8 +59,8 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
             </Row>
           </Col>
         )}
-        {((modalName === 'view' && isEditable && dirty !== null) ||
-          (modalName === 'create' && dirty !== null)) && (
+        {((modalName === 'view' && isEditable && dirty) ||
+          (modalName === 'create' && dirty)) && (
           <Col>
             <Button
               color="primary"

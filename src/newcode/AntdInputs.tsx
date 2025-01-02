@@ -14,6 +14,7 @@ import {
 } from "./utilities";
 import { AddressDetails } from "./types";
 import usePlaceSearch from "./usePlaceSearch";
+import './inputstyle.css';
 
 type AddressInputProps = {
   countryCode?: string;
@@ -26,6 +27,7 @@ type AddressInputProps = {
 const TextInput = withFloatingLabel(({ value, onChange, ...props }) => {
   return (
     <Input
+      className="myCustomComponent"
       style={{ width: "100%" }}
       value={value}
       onChange={onChange}
@@ -36,6 +38,7 @@ const TextInput = withFloatingLabel(({ value, onChange, ...props }) => {
 
 const NumberInput = withFloatingLabel(({ value, onChange, ...props }) => (
   <InputNumber
+    className="myCustomComponent"
     style={{ width: "100%" }}
     value={value}
     onChange={onChange}
@@ -50,6 +53,7 @@ const CurrencyInput = withFloatingLabel(
 
     return (
       <InputNumber
+        className="myCustomComponent"
         style={{ width: "100%" }}
         value={value}
         onChange={onChange}
@@ -70,6 +74,7 @@ const MobileInput = withFloatingLabel(
 
     return (
       <InputNumber
+        className="myCustomComponent"
         style={{ width: "100%" }}
         value={value}
         onChange={onChange}
@@ -86,6 +91,7 @@ const MobileInput = withFloatingLabel(
 const SelectInput = withFloatingLabel(
   ({ value, onChange, options, ...props }) => (
     <Select
+      className="myCustomComponent"
       style={{ width: "100%" }}
       value={value}
       onChange={onChange}
@@ -97,6 +103,7 @@ const SelectInput = withFloatingLabel(
 
 const DateInput = withFloatingLabel(({ value, onChange, ...props }) => (
   <DatePicker
+    className="myCustomComponent"
     style={{ width: "100%" }}
     value={value}
     onChange={onChange}
@@ -108,6 +115,7 @@ const DateInput = withFloatingLabel(({ value, onChange, ...props }) => (
 const TreeSelectInput = withFloatingLabel(
   ({ value, onChange, treeData, ...props }) => (
     <TreeSelect
+      className="myCustomComponent"
       value={value}
       onChange={onChange}
       treeData={treeData}
@@ -133,6 +141,7 @@ const AddressInput = withFloatingLabel(
     return (
       <div>
         <AutoComplete
+          className="myCustomComponent"
           style={{ width: "100%" }}
           onSearch={handleSearch}
           onSelect={(placeId)=> handleSelect(placeId, props.setAddressDetails)}

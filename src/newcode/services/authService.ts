@@ -9,7 +9,7 @@ interface AxiosBaseQueryArgs {
   baseUrlKey?: "hub" | "node";
 }
 
-const getToken = () => "9722be7c-4eb5-472a-b93f-4fd3a6281ce2";
+const getToken = () => "d39665f6-6a4c-4101-a9b7-1a58a423fa09";
 
 export const axiosBaseQuery = async ({
   url,
